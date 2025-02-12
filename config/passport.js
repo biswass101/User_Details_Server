@@ -10,8 +10,9 @@ opts.secretOrKey = process.env.SECRET_KEY;
 passport.use(
     new JwtStrategy(opts, async (jwt_payload, done) => {
         try {
-            const user = await User.findOne({ _id: jwt_payload.id }); // No callback
+            const user = await User.findOne({ _id: jwt_payload.id }).select('-password -__v -_id'); // No callback
             if (user) {
+                // console.log(user)
                 return done(null, user);
             } else {
                 return done(null, false);
