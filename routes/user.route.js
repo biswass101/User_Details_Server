@@ -1,10 +1,11 @@
 const passport = require('passport')
 const { runJWTauthenticator } = require('../config/passportAuth')
-const { handleAllUsers, handleRegister, handleLogin, handleProfile } = require('../controllers/user.controller')
+const { handleAllUsers, handleRegister, handleLogin, handleProfile, handleDeleteUser } = require('../controllers/user.controller')
 const userRouter = require('express').Router()
 
-//get all users
+//get all users(admin part)
 userRouter.get('/', handleAllUsers)
+userRouter.delete('/delete-user/:id', handleDeleteUser)
 
 //register Route
 userRouter.post('/register', handleRegister)

@@ -3,8 +3,40 @@ const passport = require('passport')
 const User = require('../models/user.model')
 const bcrypt = require('bcrypt')
 const saltRouns = 10
-const handleAllUsers = (req, res) => {
-    res.status(200).send("All Users here")
+const handleAllUsers = async(req, res) => {
+    try {
+        const allUser = await User.find().select('-__v')
+        res.status(200).json({
+            success: true,
+            allUser
+        })
+    } catch (error) {
+        res.status(404).json({
+            success: false,
+        })
+    }
+}
+
+const handleDeleteUser = async (req, res) => {
+    try {
+        const findUser = await User.findByIdAndDelete({_id: req.params.id})
+        if(!findUser) {
+            return res.status(400).json({
+                success: false,
+                message: "User Not Deleted"
+            })
+        } else {
+            return res.status(200).json({
+                success: true,
+                message: "User Deleted"
+            })
+        }
+    } catch (error) {
+        return res.status(404).json({
+            success: false,
+            message: "User not found to be deleted"
+        })
+    }
 }
 
 const handleRegister = async (req, res) => {
@@ -96,4 +128,4 @@ const handleProfile = (req, res) => {
     }
 }
 
-module.exports = { handleAllUsers, handleRegister, handleLogin, handleProfile }
+module.exports = { handleAllUsers, handleDeleteUser, handleRegister, handleLogin, handleProfile }
